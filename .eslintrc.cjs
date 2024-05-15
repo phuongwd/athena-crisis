@@ -45,7 +45,7 @@ module.exports = {
       },
     },
   ],
-  plugins: ['@deities'],
+  plugins: ['@deities', 'react-compiler'],
   rules: {
     '@typescript-eslint/no-restricted-imports': [
       2,
@@ -103,5 +103,6 @@ module.exports = {
     ],
     'no-extra-parens': 0,
     'no-restricted-globals': [2, 'alert', 'confirm'],
+    'react-compiler/react-compiler': 2,
   },
 };

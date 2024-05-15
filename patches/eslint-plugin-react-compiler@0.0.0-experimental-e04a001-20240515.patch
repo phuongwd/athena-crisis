@@ -1,0 +1,12 @@
+diff --git a/package.json b/package.json
+index dfc570d017042b9066863054d40200c28c5e8947..219b6071176714448fc018063643a301e0d59a7c 100644
+--- a/package.json
++++ b/package.json
+@@ -2,6 +2,7 @@
+   "name": "eslint-plugin-react-compiler",
+   "version": "0.0.0-experimental-e04a001-20240515",
+   "description": "ESLint plugin to display errors found by the React compiler.",
++  "main": "dist/index.js",
+   "scripts": {
+     "build": "rimraf dist && rollup --config --bundleConfigAsCjs",
+     "test": "tsc && jest"

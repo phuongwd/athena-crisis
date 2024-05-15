@@ -2,6 +2,7 @@ import { join } from 'node:path';
 import babelPluginFbt from 'babel-plugin-fbt';
 import babelPluginFbtImport from 'babel-plugin-fbt-import';
 import babelPluginFbtRuntime from 'babel-plugin-fbt-runtime';
+import babelPluginReactCompiler from 'babel-plugin-react-compiler';
 import isOpenSource from './isOpenSource.tsx';
 import root from './root.ts';
 
@@ -17,6 +18,7 @@ const enumManifest = (() => {
 })();
 
 export default [
+  babelPluginReactCompiler,
   babelPluginFbtImport,
   [
     babelPluginFbt,
