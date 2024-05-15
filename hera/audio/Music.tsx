@@ -3,17 +3,17 @@ import { Biome } from '@deities/athena/map/Biome.tsx';
 import UnknownTypeError from '@deities/hephaestus/UnknownTypeError.tsx';
 import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import useLocation from '@deities/ui/hooks/useLocation.tsx';
-import { createContext, ReactNode, useContext, useEffect } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useRef } from 'react';
 
 type MusicContext = {
   songByRoute: Map<string, SongName | null>;
-  timer?: ReturnType<typeof setTimeout>;
+  timerRef: { current?: ReturnType<typeof setTimeout> };
 };
 
 const fallbackSong = 'hestias-serenade';
 const context: MusicContext = {
   songByRoute: new Map(),
-  timer: undefined,
+  timerRef: {},
 };
 const Context = createContext<MusicContext>(context);
 
@@ -38,11 +38,14 @@ const isPlaying = (video: HTMLVideoElement | null | undefined) =>
 
 export function usePlayMusic(dep?: unknown) {
   const { pathname } = useLocation();
-  const context = useContext(Context);
+  const context = useRef(useContext(Context));
   useEffect(() => {
-    clearTimeout(context.timer);
-    context.timer = setTimeout(
-      () => AudioPlayer.play(context.songByRoute.get(pathname) || fallbackSong),
+    clearTimeout(context.current.timerRef.current);
+    context.current.timerRef.current = setTimeout(
+      () =>
+        AudioPlayer.play(
+          context.current.songByRoute.get(pathname) || fallbackSong,
+        ),
       isPlaying(
         document
           .getElementById('video')

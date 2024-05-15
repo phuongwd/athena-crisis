@@ -9,7 +9,7 @@ export default function Reload() {
 
   return (
     <Fragment>
-      {useMemo(hasGamePad, []) ? (
+      {useMemo(() => hasGamePad(), []) ? (
         <fbt desc="Reload description">
           Press A, B, L1 and R1 to reload the game.
         </fbt>

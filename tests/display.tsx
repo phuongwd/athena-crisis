@@ -12,7 +12,7 @@ import AudioPlayer from '@deities/ui/AudioPlayer.tsx';
 import initializeCSS from '@deities/ui/CSS.tsx';
 import { applyVar } from '@deities/ui/cssVar.tsx';
 import { css, cx, injectGlobal } from '@emotion/css';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ErrorBoundary } from 'react-error-boundary';
 
@@ -34,18 +34,21 @@ window.renderMap = (url: string) => {
   root.render(<DisplayMap url={url} />);
 };
 
-const ErrorComponent = ({ error }: { error: Error }) => (
-  <>
-    {Object.keys(window.MapHasRendered).map((key) => {
+const ErrorComponent = ({ error }: { error: Error }) => {
+  const keys = useMemo(() => Object.keys(window.MapHasRendered), []);
+
+  useLayoutEffect(() => {
+    keys.map((key) => {
       window.MapHasRendered[key] = true;
-      return (
-        <div className={redStyle} data-testid={`map-${key}`} key={key}>
-          {error.message}
-        </div>
-      );
-    })}
-  </>
-);
+    });
+  }, [keys]);
+
+  return keys.map((key) => (
+    <div className={redStyle} data-testid={`map-${key}`} key={key}>
+      {error.message}
+    </div>
+  ));
+};
 
 const DisplayMap = ({ url: initialURL }: { url: string }) => {
   const url = new URL(initialURL);
@@ -57,10 +60,12 @@ const DisplayMap = ({ url: initialURL }: { url: string }) => {
     [maps],
   );
 
-  // Initialize global state for listeners.
-  gameActionResponses?.forEach((_, index) => {
-    window.MapHasRendered[index] = false;
-  });
+  useLayoutEffect(() => {
+    // Initialize global state for listeners.
+    gameActionResponses?.forEach((_, index) => {
+      window.MapHasRendered[index] = false;
+    });
+  }, [gameActionResponses]);
 
   useEffect(() => {
     if (gameActionResponses?.length) {

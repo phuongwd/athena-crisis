@@ -21,11 +21,11 @@ export const ScrollRestoreContext = ({ children }: { children: ReactNode }) => (
 
 export default function useScrollRestore() {
   const { pathname } = useLocation();
-  const context = useContext(Context);
+  const context = useRef(useContext(Context));
   useEffect(() => {
     const timer = setTimeout(() => {
       if (context.current) {
-        context.current = false;
+        context.current.current = false;
       } else {
         window.scrollTo(0, 0);
       }
